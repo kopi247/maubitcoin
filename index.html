@@ -1,419 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MAUBITCOIN</title>
-  <style>
-    :root {
-      --bg: #0f172a;
-      --card: #111827;
-      --muted: #94a3b8;
-      --text: #e5e7eb;
-      --accent: #22c55e;
-      --danger: #ef4444;
-      --warn: #f59e0b;
-      --line: #1f2937;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Analytics Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #0b0e11;
+            --card-bg: #181a20;
+            --text-color: #eaecef;
+            --text-muted: #848e9c;
+            --accent: #f0b90b; /* Bitcoin Gold */
+        }
 
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: linear-gradient(180deg, #020617, #0b1223 40%, #0b1223);
-      color: var(--text);
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
+        header h1 {
+            color: var(--accent);
+            margin-bottom: 5px;
+            font-size: 2rem;
+        }
 
-    h1 {
-      margin: 0;
-      font-size: 1.8rem;
-      letter-spacing: 0.5px;
-    }
+        header p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 0.95rem;
+        }
 
-    .subtitle {
-      color: var(--muted);
-      font-size: 0.95rem;
-      margin-top: 4px;
-    }
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
 
-    .top-stats {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(170px, 1fr));
-      gap: 12px;
-      margin-bottom: 16px;
-    }
+        @media (min-width: 900px) {
+            .dashboard-container {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
 
-    .card {
-      background: rgba(17, 24, 39, 0.9);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 14px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-    }
+        .main-chart {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            height: 500px;
+        }
 
-    .label {
-      color: var(--muted);
-      font-size: 0.85rem;
-      margin-bottom: 6px;
-    }
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-    .value {
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
+        .widget-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 14px;
-    }
+        .widget-card h2 {
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--text-muted);
+            width: 100%;
+            text-align: left;
+            border-bottom: 1px solid #2b3139;
+            padding-bottom: 8px;
+        }
 
-    #chart {
-      width: 100%;
-      height: 420px;
-      border-radius: 10px;
-      overflow: hidden;
-    }
+        .fear-greed-container img {
+            max-width: 100%;
+            border-radius: 4px;
+        }
 
-    .side {
-      display: grid;
-      gap: 12px;
-      align-content: start;
-    }
+        footer {
+            margin-top: auto;
+            padding: 40px 20px 20px;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+        }
 
-    .signal-badge {
-      font-weight: 800;
-      font-size: 1.1rem;
-      padding: 8px 12px;
-      border-radius: 999px;
-      display: inline-block;
-      margin-top: 8px;
-      border: 1px solid transparent;
-    }
-    .buy { background: rgba(34,197,94,.14); color: #4ade80; border-color: rgba(34,197,94,.45);}
-    .sell { background: rgba(239,68,68,.14); color: #f87171; border-color: rgba(239,68,68,.45);}
-    .hold { background: rgba(245,158,11,.14); color: #fbbf24; border-color: rgba(245,158,11,.45);}
+        .dyor-banner {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #ff4d4d;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
 
-    .meter-wrap {
-      margin-top: 6px;
-    }
-
-    .meter-bar {
-      width: 100%;
-      height: 16px;
-      background: #1f2937;
-      border-radius: 999px;
-      overflow: hidden;
-      border: 1px solid #334155;
-    }
-
-    .meter-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #3b82f6, #f59e0b, #ef4444);
-      transition: width 0.4s ease;
-    }
-
-    .meter-scale {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 6px;
-    }
-
-    .history table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-
-    .history th, .history td {
-      border-bottom: 1px solid #1f2937;
-      text-align: left;
-      padding: 10px 8px;
-    }
-
-    .history th {
-      color: #cbd5e1;
-      font-weight: 600;
-    }
-
-    .small {
-      color: var(--muted);
-      font-size: 0.82rem;
-    }
-
-    footer {
-      margin: 18px 0 6px;
-      color: #cbd5e1;
-      font-size: 0.9rem;
-      text-align: center;
-      padding: 12px;
-      border-top: 1px solid #1f2937;
-    }
-
-    .dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      display: inline-block; margin-right: 6px;
-      background: #22c55e;
-      box-shadow: 0 0 8px #22c55e;
-    }
-
-    @media (max-width: 980px) {
-      .grid { grid-template-columns: 1fr; }
-      .top-stats { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
-    }
-
-    @media (max-width: 560px) {
-      .top-stats { grid-template-columns: 1fr; }
-      #chart { height: 320px; }
-    }
-  </style>
+        .disclaimer-text {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div>
-        <h1>MAUBITCOIN</h1>
-        <div class="subtitle">BTC signal dashboard (RSI-based) • Auto-check every 30 minutes</div>
-      </div>
-      <div class="small"><span class="dot"></span>Live</div>
-    </div>
 
-    <div class="top-stats">
-      <div class="card">
-        <div class="label">BTC Price (USD)</div>
-        <div class="value" id="price">$-</div>
-      </div>
-      <div class="card">
-        <div class="label">RSI (14)</div>
-        <div class="value" id="rsi">-</div>
-      </div>
-      <div class="card">
-        <div class="label">Signal</div>
-        <div id="signalBadge" class="signal-badge hold">HOLD</div>
-      </div>
-      <div class="card">
-        <div class="label">Last Updated</div>
-        <div class="value" id="updated" style="font-size:1rem;">-</div>
-      </div>
-    </div>
+    <header>
+        <h1>Bitcoin (BTC) Educational Dashboard</h1>
+        <p>Real-time data feeds, sentiment trackers, and technical aggregates.</p>
+    </header>
 
-    <div class="grid">
-      <div class="card">
-        <div class="label">Bitcoin Trading Graph (30m candles)</div>
-        <div id="chart"></div>
-      </div>
-
-      <div class="side">
-        <div class="card">
-          <div class="label">Fear & Greed Meter</div>
-          <div class="value"><span id="fearValue">-</span> / 100</div>
-          <div id="fearLabel" class="small" style="margin-top:4px;">-</div>
-          <div class="meter-wrap">
-            <div class="meter-bar">
-              <div id="meterFill" class="meter-fill"></div>
+    <div class="dashboard-container">
+        <!-- Live Chart Container -->
+        <div class="main-chart">
+            <!-- TradingView Widget BEGIN -->
+            <div class="tradingview-widget-container" style="height:100%;width:100%">
+                <div id="tradingview_btc_chart" style="height:calc(100% - 32px);width:100%"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                <script type="text/javascript">
+                new TradingView.widget({
+                    "id": "tradingview_btc_chart",
+                    "width": "100%",
+                    "height": "100%",
+                    "symbol": "BINANCE:BTCUSDT",
+                    "interval": "D",
+                    "timezone": "Etc/UTC",
+                    "theme": "dark",
+                    "style": "1",
+                    "locale": "en",
+                    "enable_publishing": false,
+                    "hide_side_toolbar": false,
+                    "allow_symbol_change": true,
+                    "calendar": true
+                });
+                </script>
             </div>
-            <div class="meter-scale">
-              <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+            <!-- TradingView Widget END -->
+        </div>
+
+        <div class="side-panel">
+            <!-- Buy/Sell Signals Gauge -->
+            <div class="widget-card">
+                <h2>Technical Signals (Buy/Sell)</h2>
+                <!-- TradingView Gauge Widget BEGIN -->
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
+                    {
+                        "interval": "4h",
+                        "width": "100%",
+                        "isTransparent": true,
+                        "height": "330",
+                        "symbol": "BINANCE:BTCUSDT",
+                        "showHeading": false,
+                        "screenMode": "normal",
+                        "locale": "en",
+                        "colorTheme": "dark"
+                    }
+                    </script>
+                </div>
+                <!-- TradingView Gauge Widget END -->
             </div>
-          </div>
-        </div>
 
-        <div class="card">
-          <div class="label">RSI Rule</div>
-          <div class="small">Buy: RSI &lt; 30</div>
-          <div class="small">Sell: RSI &gt; 70</div>
-          <div class="small">Hold: Otherwise</div>
+            <!-- Fear & Greed Meter -->
+            <div class="widget-card">
+                <h2>Market Sentiment</h2>
+                <div class="fear-greed-container">
+                    <!-- Dynamic Official Alternative.me Widget -->
+                    <a href="https://alternative.me/crypto/fear-and-greed-index/">
+                        <img src="https://alternative.me/crypto/fear-and-greed-index.png" alt="Latest Crypto Fear & Greed Index" />
+                    </a>
+                </div>
+            </div>
         </div>
-
-        <div class="card history">
-          <div class="label">Recent Signal History</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Price</th>
-                <th>RSI</th>
-                <th>Signal</th>
-              </tr>
-            </thead>
-            <tbody id="historyBody"></tbody>
-          </table>
-        </div>
-      </div>
     </div>
 
+    <!-- Mandatory Disclaimer Footer -->
     <footer>
-      DYOR (Do Your Own Research). Not financial advice. For educational purposes only.
+        <div class="dyor-banner">DO YOUR OWN RESEARCH (DYOR)</div>
+        <div class="disclaimer-text">
+            This page is for <strong>educational purposes only</strong>. The indicators, charts, gauges, and sentiment readings provided above are derived from third-party automation tools and do not constitute professional financial, investment, or trading advice. Cryptocurrencies are highly volatile assets; always assess risk carefully before making any decisions.
+        </div>
     </footer>
-  </div>
 
-
-<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
-<script>
-  const priceEl = document.getElementById('price');
-  const rsiEl = document.getElementById('rsi');
-  const signalBadgeEl = document.getElementById('signalBadge');
-  const fearValueEl = document.getElementById('fearValue');
-  const fearLabelEl = document.getElementById('fearLabel');
-  const meterFillEl = document.getElementById('meterFill');
-  const historyBodyEl = document.getElementById('historyBody');
-
-  const historyRows = [];
-
-  // Chart setup
-  const chartContainer = document.getElementById('chart');
-  const chart = LightweightCharts.createChart(chartContainer, {
-    layout: { background: { color: '#0b1223' }, textColor: '#cbd5e1' },
-    grid: { vertLines: { color: '#1f2937' }, horzLines: { color: '#1f2937' } },
-    width: chartContainer.clientWidth,
-    height: chartContainer.clientHeight,
-    rightPriceScale: { borderColor: '#334155' },
-    timeScale: { borderColor: '#334155', timeVisible: true, secondsVisible: false }
-  });
-  const candleSeries = chart.addCandlestickSeries({
-    upColor: '#22c55e', downColor: '#ef4444',
-    borderUpColor: '#22c55e', borderDownColor: '#ef4444',
-    wickUpColor: '#22c55e', wickDownColor: '#ef4444'
-  });
-
-  window.addEventListener('resize', () => {
-    chart.applyOptions({ width: chartContainer.clientWidth, height: chartContainer.clientHeight });
-  });
-
-  function calculateRSI(closes, period = 14) {
-    if (closes.length <= period) return null;
-    let gains = 0, losses = 0;
-    for (let i = 1; i <= period; i++) {
-      const diff = closes[i] - closes[i - 1];
-      if (diff >= 0) gains += diff; else losses += Math.abs(diff);
-    }
-    let avgGain = gains / period;
-    let avgLoss = losses / period;
-    for (let i = period + 1; i < closes.length; i++) {
-      const diff = closes[i] - closes[i - 1];
-      const gain = diff > 0 ? diff : 0;
-      const loss = diff < 0 ? Math.abs(diff) : 0;
-      avgGain = (avgGain * (period - 1) + gain) / period;
-      avgLoss = (avgLoss * (period - 1) + loss) / period;
-    }
-    if (avgLoss === 0) return 100;
-    const rs = avgGain / avgLoss;
-    return 100 - (100 / (1 + rs));
-  }
-
-  function getSignalFromRSI(rsi) {
-    if (rsi < 30) return 'BUY';
-    if (rsi > 70) return 'SELL';
-    return 'HOLD';
-  }
-
-  function applySignalBadge(signal) {
-    signalBadgeEl.textContent = signal;
-    signalBadgeEl.classList.remove('buy', 'sell', 'hold');
-    signalBadgeEl.classList.add(signal.toLowerCase());
-  }
-
-  function fearLabel(value) {
-    const v = Number(value);
-    if (v <= 24) return '😱 Extreme Fear';
-    if (v <= 49) return '😟 Fear';
-    if (v <= 74) return '😊 Greed';
-    return '🤑 Extreme Greed';
-  }
-
-  function addHistoryRow(timeText, price, rsi) {
-    const signal = getSignalFromRSI(rsi);
-    historyRows.unshift({ timeText, price, rsi, signal });
-    if (historyRows.length > 6) historyRows.pop();
-
-    historyBodyEl.innerHTML = historyRows.map(row => `
-      <tr>
-        <td>${row.timeText}</td>
-        <td>$${row.price.toLocaleString(undefined, {maximumFractionDigits:0})}</td>
-        <td>${row.rsi.toFixed(1)}</td>
-      </tr>
-    `).join('');
-  }
-
-  // Coinbase candles (public, usually CORS-friendly)
-  async function fetchBTCData() {
-    // 30m granularity is not supported by Coinbase, so we use 1h candles
-    const end = new Date();
-    const start = new Date(end.getTime() - 200 * 60 * 60 * 1000); // 200 hours
-    const url = `https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=3600&start=${start.toISOString()}&end=${end.toISOString()}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Failed to fetch BTC candles');
-    const arr = await res.json();
-
-    // Coinbase candle format: [time, low, high, open, close, volume]
-    const candles = arr.map(c => ({
-      time: c[0],
-      low: Number(c[1]),
-      high: Number(c[2]),
-      open: Number(c[3]),
-      close: Number(c[4])
-    })).sort((a, b) => a.time - b.time);
-
-    return candles;
-  }
-
-  async function fetchFearGreed() {
-    const target = encodeURIComponent('https://api.alternative.me/fng/?limit=1');
-    const proxyUrl = `https://api.allorigins.win/get?url=${target}`;
-    const res = await fetch(proxyUrl);
-    if (!res.ok) throw new Error('Failed to fetch fear & greed');
-    const wrapped = await res.json();
-    const parsed = JSON.parse(wrapped.contents);
-    return Number(parsed?.data?.[0]?.value ?? 50);
-  }
-
-  async function refreshDashboard() {
-    try {
-      const [candles, fg] = await Promise.all([fetchBTCData(), fetchFearGreed()]);
-      candleSeries.setData(candles);
-      chart.timeScale().fitContent();
-
-      const closes = candles.map(c => c.close);
-      const latestPrice = closes[closes.length - 1];
-      const rsi = calculateRSI(closes, 14);
-      const signal = rsi !== null ? getSignalFromRSI(rsi) : 'HOLD';
-
-      priceEl.textContent = `$${latestPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-      rsiEl.textContent = rsi !== null ? rsi.toFixed(1) : '-';
-      applySignalBadge(signal);
-
-      fearValueEl.textContent = fg;
-      fearLabelEl.textContent = fearLabel(fg);
-      meterFillEl.style.width = `${Math.max(0, Math.min(100, fg))}%`;
-
-      if (rsi !== null) {
-        const now = new Date();
-        addHistoryRow(now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}), latestPrice, rsi);
-      }
-    } catch (err) {
-      console.error(err);
-      fearLabelEl.textContent = 'Data load failed (API/CORS).';
-    }
-  }
-
-  refreshDashboard();
-  setInterval(refreshDashboard, 30 * 60 * 1000);
-</script>
+</body>
+</html>
